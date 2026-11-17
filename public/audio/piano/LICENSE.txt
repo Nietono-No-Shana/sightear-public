@@ -1,0 +1,20 @@
+Salamander Grand Piano V3
+=========================
+
+Recorded by Alexander Holm.
+Source: https://archive.org/details/SalamanderGrandPianoV3
+License: Creative Commons Attribution 3.0 Unported (CC BY 3.0)
+         http://creativecommons.org/licenses/by/3.0/
+
+This directory contains a 30-note subset (A0, C1, D#1, F#1 ... C8, sampled in
+minor thirds) of the library published for the web by Tone.js:
+https://tonejs.github.io/audio/salamander/
+
+Changes made for sightear:
+  * selected the 30 notes used by the Tone.js mp3 subset;
+  * trimmed each file to 8 seconds with a 0.5 s fade-out;
+  * converted to mono, 44.1 kHz, 80 kbps MP3;
+  * measured the attack level of each note and stored a per-sample loudness
+    compensation gain in src/adapters/piano-samples.ts.
+
+No other processing was applied.

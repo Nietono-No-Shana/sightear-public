@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "packId": "sample.generated-scores",
+  "revision": "0.2.0",
+  "title": "生成式谱面样例",
+  "lessons": [
+    {
+      "id": "sample.generated-rhythm",
+      "order": 1,
+      "source": { "address": null, "catalogTitle": null, "evidence": "local-design", "note": "本地生成器接口样例，仅作格式样例。" },
+      "spec": {
+        "id": "sample.generated-rhythm", "version": 1, "kind": "rhythm-reading",
+        "title": "3/4 节奏视读", "tempoBpm": 90, "itemRating": 1100, "questionCount": 8,
+        "policy": { "grading": "graded-v2", "onsetMs": 100, "durationMs": 150, "pitchCents": 25, "latencyMs": 0, "alignStart": false },
+        "scores": [],
+        "generator": {
+          "kind": "rhythm-grid", "version": 1, "clef": "treble",
+          "key": { "tonic": 0, "mode": "major", "fifths": 0 },
+          "time": { "beats": 3, "unit": 4 }, "measures": 4,
+          "durations": [{ "value": 2, "dots": 0 }, { "value": 4, "dots": 0 }, { "value": 8, "dots": 0 }],
+          "restProbability": 10
+        }
+      }
+    },
+    {
+      "id": "sample.generated-melody",
+      "order": 2,
+      "source": { "address": null, "catalogTitle": null, "evidence": "local-design", "note": "降 B 大调基础旋律生成规则；音域、速度、休止率与跳进限制均为本地设计。" },
+      "spec": {
+        "id": "sample.generated-melody", "version": 1, "kind": "melody-singing",
+        "title": "降 B 大调旋律视唱", "tempoBpm": 90, "itemRating": 1100, "questionCount": 8,
+        "policy": { "grading": "graded-v2", "onsetMs": 100, "durationMs": 150, "pitchCents": 25, "latencyMs": 0, "alignStart": false },
+        "scores": [],
+        "generator": {
+          "kind": "diatonic-melody", "version": 1, "clef": "treble",
+          "key": { "tonic": 10, "mode": "major", "fifths": -2 },
+          "time": { "beats": 6, "unit": 8 }, "measures": 2,
+          "durations": [{ "value": 4, "dots": 0 }, { "value": 8, "dots": 0 }],
+          "restProbability": 0, "pitchRange": [58, 70], "maxLeapSemitones": 5
+        }
+      }
+    },
+    {
+      "id": "sample.generated-melody-v2",
+      "order": 3,
+      "source": { "address": null, "catalogTitle": null, "evidence": "local-design", "note": "附点、完整三连音组及延音线生成接口样例。所有参数均为本地设计。" },
+      "spec": {
+        "id": "sample.generated-melody-v2", "version": 1, "kind": "melody-singing",
+        "title": "附点、三连音与延音线", "tempoBpm": 90, "itemRating": 1100, "questionCount": 8,
+        "policy": { "grading": "graded-v2", "onsetMs": 100, "durationMs": 150, "pitchCents": 25, "latencyMs": 0, "alignStart": false },
+        "scores": [],
+        "generator": {
+          "kind": "diatonic-melody", "version": 2, "clef": "treble",
+          "key": { "tonic": 7, "mode": "major", "fifths": 1 },
+          "time": { "beats": 4, "unit": 4 }, "measures": 3,
+          "durations": [
+            { "value": 8, "dots": 1 }, { "value": 16, "dots": 0 },
+            { "value": 8, "dots": 0, "tuplet": { "actual": 3, "normal": 2 } }
+          ],
+          "restProbability": 10, "pitchRange": [60, 72], "maxLeapSemitones": 5,
+          "ties": { "withinMeasureProbability": 20, "acrossMeasureProbability": 50 }
+        }
+      }
+    }
+  ]
+}

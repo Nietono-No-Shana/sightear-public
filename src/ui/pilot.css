@@ -1,0 +1,30 @@
+.pilot h2 { margin: 0; font-size: 20px; }
+.pilot .row, .pilot-actions, .pilot-options { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.pilot-actions { margin-left: auto; }
+.pilot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+.pilot-grid > button { text-align: left; white-space: normal; }
+.pilot-grid strong, .pilot-grid span { display: block; }
+.pilot-grid span { font-size: 12px; color: #aebdd0; margin-top: 7px; }
+.pilot-input, .pilot-feedback, .pilot-editor { margin: 18px 0; }
+.pilot input, .pilot select { background: #11151c; color: #e8edf4; border: 1px solid #556477; border-radius: 5px; padding: 7px; margin: 3px; }
+.pilot-latency { width: 85px; }
+.pilot-score-svg { display: block; width: 100%; min-width: 520px; background: #fffaf0; border-radius: 8px; }
+.pilot-score, .pilot-given, .pilot-feedback > div { overflow-x: auto; }
+.pilot-score { margin: 10px 0; }
+.pilot-given:not(:empty) { margin-top: 16px; }
+.pilot-feedback .staff-svg { margin: 10px 0; }
+.pilot [aria-pressed=true] { outline: 3px solid #64b5f6; }
+.pilot-note-list > div { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.pilot-tap { width: 100%; min-height: 90px; touch-action: manipulation; }
+.pilot [hidden] { display: none !important; }
+.pilot-details { width: 100%; font-size: 12px; border-collapse: collapse; margin: 18px 0; }
+.pilot-details th, .pilot-details td { padding: 8px 3px; border-bottom: 1px solid #394657; text-align: left; }
+.pilot-feedback > button { margin: 6px 10px 6px 0; }
+.pilot-metronome { padding: 12px 0; margin-top: 10px; border-top: 1px solid #394657; }
+.pilot-beats { display: flex; gap: 6px; }
+.pilot-beats span { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; border: 1px solid #718096; font-size: 13px; }
+.pilot-beats [aria-current] { background: #64b5f6; color: #11151c; }
+.pilot-beats span:first-child[aria-current] { background: #f3c767; }
+.pilot-live-pitch { color: #8bc9ff; font-variant-numeric: tabular-nums; }
+.pilot-recording { display: grid; gap: 8px; margin: 12px 0; }
+.pilot-recording audio { width: 100%; }

@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "id": "sightear:sample-interval",
+      "title": "音程与和弦辨认",
+      "subtitle": "从音程比较到三和弦、七和弦的听辨",
+      "group": "comprehensive",
+      "modules": [
+        {
+          "id": "sightear:sample-interval:m1",
+          "title": "音程",
+          "lessons": [
+            {
+              "id": "sightear:sample-interval:m1:l1",
+              "title": "下行三度辨认",
+              "content": { "packId": "sample.authoring-v3", "lessonId": "sample.interval" }
+            }
+          ]
+        },
+        {
+          "id": "sightear:sample-interval:m2",
+          "title": "三和弦",
+          "lessons": [
+            {
+              "id": "sightear:sample-interval:m2:l1",
+              "title": "三和弦辨认",
+              "content": { "packId": "sample.authoring-v3", "lessonId": "sample.chord" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sightear:sample-harmony",
+      "title": "扩展和声",
+      "subtitle": "九、十一、十三和弦与固定调性进行的听辨",
+      "group": "comprehensive",
+      "modules": [
+        {
+          "id": "sightear:sample-harmony:m1",
+          "title": "扩展和弦",
+          "lessons": [
+            {
+              "id": "sightear:sample-harmony:m1:l1",
+              "title": "十一与十三和弦辨认",
+              "content": { "packId": "sample.extended-harmony", "lessonId": "sample.extended-chords" }
+            },
+            {
+              "id": "sightear:sample-harmony:m1:l2",
+              "title": "小大七和弦转位",
+              "content": { "packId": "sample.extended-harmony", "lessonId": "sample.extended-inversions" }
+            }
+          ]
+        },
+        {
+          "id": "sightear:sample-harmony:m2",
+          "title": "和声进行",
+          "lessons": [
+            {
+              "id": "sightear:sample-harmony:m2:l1",
+              "title": "固定调性扩展和弦进行",
+              "content": { "packId": "sample.extended-harmony", "lessonId": "sample.extended-progression" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sightear:sample-score",
+      "title": "谱面视读与视唱",
+      "subtitle": "按生成的谱面视读节奏、视唱旋律",
+      "group": "comprehensive",
+      "modules": [
+        {
+          "id": "sightear:sample-score:m1",
+          "title": "视读",
+          "lessons": [
+            {
+              "id": "sightear:sample-score:m1:l1",
+              "title": "3/4 节奏视读",
+              "content": { "packId": "sample.generated-scores", "lessonId": "sample.generated-rhythm" }
+            },
+            {
+              "id": "sightear:sample-score:m1:l2",
+              "title": "降 B 大调旋律视唱",
+              "content": { "packId": "sample.generated-scores", "lessonId": "sample.generated-melody" }
+            },
+            {
+              "id": "sightear:sample-score:m1:l3",
+              "title": "附点、三连音与延音线",
+              "content": { "packId": "sample.generated-scores", "lessonId": "sample.generated-melody-v2" }
+            },
+            {
+              "id": "sightear:sample-score:m1:l4",
+              "title": "和声小调专项旋律",
+              "content": { "packId": "sample.authoring-v3", "lessonId": "sample.targeted-melody" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sightear:sample-rhythm",
+      "title": "节奏视读",
+      "subtitle": "看谱拍击节奏",
+      "group": "comprehensive",
+      "modules": [
+        {
+          "id": "sightear:sample-rhythm:m1",
+          "title": "基础节奏",
+          "lessons": [
+            {
+              "id": "sightear:sample-rhythm:m1:l1",
+              "title": "四分音符节奏视读",
+              "content": { "packId": "workshop.rhythm-reading", "lessonId": "workshop.rhythm-reading.sample" }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

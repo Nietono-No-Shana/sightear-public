@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "packId": "sample.authoring-v3",
+  "revision": "0.1.0",
+  "title": "规模化填课接口样例",
+  "lessons": [
+    {
+      "id": "sample.interval", "order": 1,
+      "source": { "address": null, "catalogTitle": null, "evidence": "local-design", "note": "本地接口样例，非原版参数。" },
+      "spec": {
+        "id": "sample.interval", "version": 1, "title": "下行三度辨认", "provenance": "local-design",
+        "sourceTopic": { "courseId": "sightear:samples", "activity": 2 },
+        "task": { "kind": "interval-identification", "codes": ["m3", "M3"] },
+        "stimulus": { "direction": "desc", "rootMidi": [48, 60], "tempoBpm": 90, "reference": "none", "gapBeats": 0 },
+        "questionCount": 8, "scoring": "exact-choice-v1", "availability": "engine-ready"
+      }
+    },
+    {
+      "id": "sample.chord", "order": 2,
+      "source": { "address": null, "catalogTitle": null, "evidence": "local-design", "note": "本地接口样例，非原版参数。" },
+      "spec": {
+        "id": "sample.chord", "version": 1, "title": "三和弦辨认", "provenance": "local-design",
+        "sourceTopic": { "courseId": "sightear:samples", "activity": 1 },
+        "task": { "kind": "chord-identification", "codes": ["maj", "min", "dim", "aug"] },
+        "stimulus": { "direction": "harmonic", "rootMidi": [48, 60], "tempoBpm": 90, "reference": "none", "gapBeats": 0 },
+        "questionCount": 8, "scoring": "exact-choice-v1", "availability": "engine-ready"
+      }
+    },
+    {
+      "id": "sample.targeted-melody", "order": 3,
+      "source": { "address": null, "catalogTitle": null, "evidence": "local-design", "note": "本地专项样例：每题至少两组附点八分与十六分，至少一组三连音和一处跨小节延音。A 和声小调，首尾主音。" },
+      "spec": {
+        "id": "sample.targeted-melody", "version": 1, "kind": "melody-singing", "title": "和声小调专项旋律",
+        "tempoBpm": 90, "itemRating": 1100, "questionCount": 8,
+        "policy": { "grading": "graded-v2", "onsetMs": 100, "durationMs": 150, "pitchCents": 25, "latencyMs": 0, "alignStart": false },
+        "scores": [],
+        "generator": {
+          "kind": "diatonic-melody", "version": 3, "clef": "treble",
+          "key": { "tonic": 9, "mode": "minor", "fifths": 0 }, "time": { "beats": 4, "unit": 4 }, "measures": 3,
+          "durations": [{ "value": 4, "dots": 0 }], "restProbability": 0,
+          "patterns": [
+            { "id": "dotted-pair", "minOccurrences": 2, "notes": [
+              { "duration": { "value": 8, "dots": 1 }, "rest": false },
+              { "duration": { "value": 16, "dots": 0 }, "rest": false }
+            ] },
+            { "id": "triplet", "minOccurrences": 1, "notes": [
+              { "duration": { "value": 8, "dots": 0, "tuplet": { "actual": 3, "normal": 2 } }, "rest": false },
+              { "duration": { "value": 8, "dots": 0, "tuplet": { "actual": 3, "normal": 2 } }, "rest": false },
+              { "duration": { "value": 8, "dots": 0, "tuplet": { "actual": 3, "normal": 2 } }, "rest": false }
+            ] }
+          ],
+          "required": { "dottedNotes": 2, "tripletGroups": 1, "acrossMeasureTies": 1 },
+          "ties": { "withinMeasureProbability": 0, "acrossMeasureProbability": 100 },
+          "pitchRange": [57, 69], "maxLeapSemitones": 5,
+          "melody": { "scale": "harmonicMinor", "degrees": [1, 2, 3, 4, 5, 6, 7], "startDegrees": [1], "endDegrees": [1], "allowRepeatedNotes": false }
+        }
+      }
+    }
+  ]
+}

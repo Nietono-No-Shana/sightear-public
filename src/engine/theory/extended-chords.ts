@@ -1,0 +1,16 @@
+export const EXTENDED_CHORDS = {
+  minorMajor7: { code: 'minmaj7', label: '小大七和弦', tones: [[3, 3], [5, 7], [7, 11]] },
+  diminishedMajor7: { code: 'dimmaj7', label: '减大七和弦', tones: [[3, 3], [5, 6], [7, 11]] },
+  minorMajor9: { code: 'minmaj9', label: '小大九和弦', tones: [[3, 3], [5, 7], [7, 11], [9, 14]] },
+  dominant7Sharp9: { code: '7#9', label: '属七升九和弦', tones: [[3, 4], [5, 7], [7, 10], [9, 15]] },
+  dominant11: { code: 'dom11', label: '属十一和弦', tones: [[3, 4], [5, 7], [7, 10], [9, 14], [11, 17]] },
+  minor11: { code: 'min11', label: '小十一和弦', tones: [[3, 3], [5, 7], [7, 10], [9, 14], [11, 17]] },
+  major11: { code: 'maj11', label: '大十一和弦', tones: [[3, 4], [5, 7], [7, 11], [9, 14], [11, 17]] },
+  dominant13: { code: 'dom13', label: '属十三和弦', tones: [[3, 4], [5, 7], [7, 10], [9, 14], [11, 17], [13, 21]] },
+  minor13: { code: 'min13', label: '小十三和弦', tones: [[3, 3], [5, 7], [7, 10], [9, 14], [11, 17], [13, 21]] },
+  major13: { code: 'maj13', label: '大十三和弦', tones: [[3, 4], [5, 7], [7, 11], [9, 14], [11, 17], [13, 21]] },
+  dominant9Sharp11: { code: 'dom9#11', label: '属九升十一和弦', tones: [[3, 4], [5, 7], [7, 10], [9, 14], [11, 18]] },
+  major9Sharp11: { code: 'maj9#11', label: '大九升十一和弦', tones: [[3, 4], [5, 7], [7, 11], [9, 14], [11, 18]] },
+  major69: { code: 'maj69', label: '大六加九和弦', tones: [[3, 4], [5, 7], [6, 9], [9, 14]] },
+  minor69: { code: 'min69', label: '小六加九和弦', tones: [[3, 3], [5, 7], [6, 9], [9, 14]] },
+} as const;

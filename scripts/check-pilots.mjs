@@ -1,0 +1,180 @@
+import assert from 'node:assert/strict';
+import { writeFile, unlink } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+const modulePath = process.argv[2];
+if (!modulePath) throw new Error('Usage: node scripts/check-pilots.mjs <playwright index.mjs> [base URL]');
+const { chromium } = await import(pathToFileURL(resolve(modulePath)).href);
+const base = process.argv[3] ?? 'http://127.0.0.1:4179';
+const wavePath = resolve('dist/pilot-test-input.wav');
+const rate = 48000;
+const sampleCount = rate * 12;
+const wave = Buffer.alloc(44 + sampleCount * 2);
+wave.write('RIFF', 0); wave.writeUInt32LE(wave.length - 8, 4); wave.write('WAVEfmt ', 8);
+wave.writeUInt32LE(16, 16); wave.writeUInt16LE(1, 20); wave.writeUInt16LE(1, 22);
+wave.writeUInt32LE(rate, 24); wave.writeUInt32LE(rate * 2, 28); wave.writeUInt16LE(2, 32); wave.writeUInt16LE(16, 34);
+wave.write('data', 36); wave.writeUInt32LE(sampleCount * 2, 40);
+for (let index = 0; index < sampleCount; index += 1) wave.writeInt16LE(Math.round(8000 * Math.sin(2 * Math.PI * 440 * index / rate)), 44 + index * 2);
+await writeFile(wavePath, wave);
+const browser = await chromium.launch({ channel: 'msedge', headless: true,
+  args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream', `--use-file-for-fake-audio-capture=${wavePath}`] });
+const errors = [];
+try {
+  const context = await browser.newContext({ viewport: { width: 1100, height: 1000 }, permissions: ['microphone'] });
+  const page = await context.newPage();
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto(`${base}/#pilot`);
+  await page.locator('.pilot-grid > button').last().waitFor();
+  assert.equal(await page.locator('.pilot-grid > button').count(), 14);
+  await page.screenshot({ path: 'dist/pilot-list.png', fullPage: true });
+  const enter = async (title) => page.locator('.pilot-grid > button').filter({ hasText: title }).click();
+  const back = async () => page.getByRole('button', { name: '题型列表', exact: true }).click();
+  const submit = async () => {
+    await page.getByRole('button', { name: '提交', exact: true }).click();
+    await page.locator('.pilot-feedback h3').waitFor();
+    assert.equal(await page.locator('.pilot-status').textContent(), '已保存到试练记录');
+    assert.equal(await page.getByRole('button', { name: '提交', exact: true }).isDisabled(), true);
+  };
+  for (const title of ['和弦辨认', '音程辨认', '和弦转位', '音阶辨认', '音程比较']) {
+    await enter(title);
+    assert.equal(await page.locator('.pilot-feedback').textContent(), '');
+    assert.equal(await page.locator('.pilot-given svg').count(), 1);
+    assert.equal(await page.locator('.pilot-given ellipse').count(), 1);
+    const clef = await page.locator('.pilot-given svg text').first().textContent();
+    const referenceY = await page.locator('.pilot-given ellipse').getAttribute('cy');
+    await page.locator('.pilot-play').click();
+    await page.locator('.pilot-options button').first().click();
+    await submit();
+    assert.equal(await page.locator('.pilot-feedback svg').count(), title === '音程比较' ? 2 : 1);
+    for (const staff of await page.locator('.pilot-feedback svg').all()) assert.equal(await staff.locator('text').first().textContent(), clef);
+    assert.equal(await page.locator('.pilot-feedback ellipse').first().getAttribute('cy'), referenceY);
+    await page.screenshot({ path: `dist/pilot-answer-${title}.png`, fullPage: true });
+    await page.getByRole('button', { name: '下一题', exact: true }).click();
+    assert.equal(await page.locator('.pilot-progress').textContent(), '2 / 2');
+    const secondClef = await page.locator('.pilot-given svg text').first().textContent();
+    await page.locator('.pilot-options button').last().click();
+    await submit();
+    for (const staff of await page.locator('.pilot-feedback svg').all()) assert.equal(await staff.locator('text').first().textContent(), secondClef);
+    await page.getByRole('button', { name: '完成', exact: true }).click();
+    await page.getByRole('button', { name: '重复这组题' }).click();
+    assert.equal(await page.locator('.pilot-progress').textContent(), '1 / 2');
+    await back();
+    console.log(`PASS ${title}: play, submit, next, repeat`);
+  }
+  await enter('和声进行');
+  for (const select of await page.locator('.pilot-input select').all()) await select.selectOption({ index: 1 });
+  await submit();
+  assert.equal(await page.locator('.pilot-feedback svg').count(), 1);
+  await page.screenshot({ path: 'dist/pilot-answer-harmony.png', fullPage: true });
+  await back();
+  await enter('节奏纠错');
+  await page.screenshot({ path: 'dist/pilot-rhythm-score.png', fullPage: true });
+  await page.getByRole('button', { name: '位置 2', exact: true }).click();
+  await submit(); await back();
+  for (const title of ['节奏听写', '旋律听写']) {
+    await enter(title);
+    assert.equal(await page.locator('.pilot-given svg').count(), 0);
+    for (let index = 0; index < 4; index += 1) await page.getByRole('button', { name: '添加', exact: true }).click();
+    await page.getByRole('button', { name: '撤销', exact: true }).click();
+    assert.equal(await page.locator('.pilot-submit').isDisabled(), true);
+    await page.getByRole('button', { name: '添加', exact: true }).click();
+    await page.screenshot({ path: `dist/pilot-${title === '节奏听写' ? 'rhythm' : 'melody'}-editor.png`, fullPage: true });
+    await submit();
+    assert.equal(await page.locator('.pilot-feedback svg').count(), 1);
+    await back();
+    console.log(`PASS ${title}: editor, undo, submit`);
+  }
+  for (const title of ['节奏模仿', '节奏视读']) {
+    await enter(title);
+    assert.equal(await page.locator('.pilot-metronome-sound').isChecked(), true);
+    await page.locator('.pilot-metronome-toggle').click();
+    await page.locator('.pilot-beats [aria-current]').waitFor();
+    assert.equal(await page.locator('.pilot-metronome-toggle').getAttribute('aria-pressed'), 'true');
+    await page.locator('.pilot-metronome-toggle').click();
+    assert.equal(await page.locator('.pilot-beats [aria-current]').count(), 0);
+    if (title === '节奏视读') assert.equal(await page.locator('.pilot-play').isVisible(), false);
+    await page.locator('.pilot-record').click();
+    await page.locator('.pilot-beat-status').filter({ hasText: '预备拍' }).waitFor();
+    assert.equal(await page.locator('.pilot-metronome-toggle').isDisabled(), true);
+    await page.locator('.pilot-capture-status').filter({ hasText: '正在录入' }).waitFor();
+    assert.equal(await page.locator('.pilot-beat-status').textContent(), '作答中 · 有声');
+    assert.equal(await page.locator('.pilot-beats [aria-current]').textContent(), '1');
+    await page.keyboard.press('Space');
+    await page.locator('.pilot-stop').click();
+    assert.equal(await page.locator('.pilot-beat-status').textContent(), '已停止');
+    await submit(); await back();
+    console.log(`PASS ${title}: count-in, keyboard tap, submit`);
+  }
+  for (const title of ['音程视唱', '旋律视唱', '旋律模唱']) {
+    await enter(title);
+    assert.equal(await page.locator('.pilot-metronome-sound').isChecked(), true);
+    await page.locator('.pilot-record').click();
+    await page.locator('.pilot-capture-status').filter({ hasText: '正在录入演唱' }).waitFor();
+    assert.equal(await page.locator('.pilot-beat-status').textContent(), '作答中 · 有声');
+    await page.waitForFunction(() => (document.querySelector('.pilot-pitch-path')?.getAttribute('d')?.length ?? 0) > 20);
+    assert.match(await page.locator('.pilot-live-pitch').textContent(), /A4/);
+    await page.waitForFunction(() => document.querySelector('.pilot-stop')?.disabled === true, undefined, { timeout: 10000 });
+    assert.match(await page.locator('.pilot-capture-status').textContent(), /^识别/);
+    assert.equal(await page.locator('.pilot-beats [aria-current]').count(), 0);
+    await page.waitForFunction(() => document.querySelector('.pilot-recording-audio')?.readyState >= 1);
+    const source = await page.locator('.pilot-recording-audio').getAttribute('src');
+    assert.ok(source.startsWith('blob:'));
+    const recorded = await page.evaluate(async () => {
+      const audio = document.querySelector('.pilot-recording-audio');
+      const bytes = await (await fetch(audio.src)).arrayBuffer();
+      const buffer = await new OfflineAudioContext(1, 1, 48000).decodeAudioData(bytes);
+      const samples = buffer.getChannelData(0);
+      const first = Math.floor(buffer.sampleRate * 0.3);
+      const last = first + Math.floor(buffer.sampleRate * 0.5);
+      let crossings = 0;
+      for (let index = first + 1; index < last; index += 1) if (samples[index - 1] < 0 && samples[index] >= 0) crossings += 1;
+      await audio.play();
+      return { duration: buffer.duration, frequency: crossings / 0.5, channels: buffer.numberOfChannels };
+    });
+    assert.ok(recorded.duration > 2 && recorded.duration < 4.5);
+    assert.ok(Math.abs(recorded.frequency - 440) < 5);
+    assert.equal(recorded.channels, 1);
+    await page.waitForFunction(() => document.querySelector('.pilot-recording-audio').currentTime > 0.2);
+    assert.ok(Number(await page.locator('.pilot-pitch-cursor').getAttribute('x1')) > 140);
+    await page.locator('.pilot-recording-audio').evaluate((audio) => audio.pause());
+    await page.screenshot({ path: `dist/pilot-live-${title}.png`, fullPage: true });
+    if (title === '旋律视唱') {
+      await page.locator('.pilot-record').click();
+      assert.equal(await page.locator('.pilot-recording').isVisible(), false);
+      assert.equal(await page.locator('.pilot-pitch-path').getAttribute('d'), '');
+      const revoked = await page.evaluate(async (url) => { try { await fetch(url); return false; } catch { return true; } }, source);
+      assert.equal(revoked, true);
+      await page.locator('.pilot-capture-status').filter({ hasText: '正在录入演唱' }).waitFor();
+      await page.waitForFunction(() => document.querySelector('.pilot-stop')?.disabled === true, undefined, { timeout: 10000 });
+    }
+    await submit();
+    assert.equal(await page.locator('.pilot-recording').isVisible(), true);
+    const latestSource = await page.locator('.pilot-recording-audio').getAttribute('src');
+    await back();
+    const released = await page.evaluate(async (url) => { try { await fetch(url); return false; } catch { return true; } }, latestSource);
+    assert.equal(released, true);
+    console.log(`PASS ${title}: fake microphone, pitch analysis, submit`);
+  }
+  await enter('旋律模唱');
+  await page.locator('.pilot-record').click();
+  await back();
+  await enter('和弦辨认');
+  assert.equal(await page.locator('.pilot-submit').isDisabled(), true);
+  await back();
+  const stored = await page.evaluate(() => ({ pilot: JSON.parse(localStorage.getItem('sightear.pilot.attempts.v1') ?? '[]'), formal: localStorage.getItem('sightear.attempts.v2') }));
+  assert.equal(stored.pilot.length, 19);
+  assert.equal(new Set(stored.pilot.map((attempt) => attempt.id)).size, 19);
+  assert.equal(stored.formal, null);
+  assert.equal(JSON.stringify(stored.pilot).includes('blob:'), false);
+  await page.reload(); await page.locator('.pilot-grid > button').last().waitFor();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({ path: 'dist/pilot-mobile.png', fullPage: true });
+  await page.getByRole('button', { name: '返回首页', exact: true }).click();
+  assert.equal(await page.getByRole('button', { name: '题型试练', exact: true }).isEnabled(), true);
+  assert.deepEqual(errors, []);
+  console.log('PASS 14 types; 19 isolated attempts; cancellation, reload and home return; no browser errors');
+} finally {
+  await browser.close();
+  await unlink(wavePath);
+}

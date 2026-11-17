@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1, "packId": "sample.extended-harmony", "revision": "0.1.0", "title": "扩展和弦接口试练",
+  "lessons": [
+    {
+      "id": "sample.extended-chords", "order": 1,
+      "source": { "address": null, "catalogTitle": null, "evidence": "local-design", "note": "本地接口试练，不代表原版课程参数。" },
+      "spec": {
+        "id": "sample.extended-chords", "version": 1, "title": "十一与十三和弦辨认", "provenance": "local-design",
+        "sourceTopic": { "courseId": "sightear:samples", "activity": 1 },
+        "task": { "kind": "chord-identification", "codes": ["dom11", "min11", "dom13", "maj13"],
+          "voicing": { "bassDegree": 1, "omitDegrees": [5], "spread": "open" } },
+        "stimulus": { "direction": "harmonic", "rootMidi": [48, 59], "tempoBpm": 90, "reference": "none", "gapBeats": 0 },
+        "questionCount": 8, "scoring": "exact-choice-v1", "availability": "engine-ready"
+      }
+    },
+    {
+      "id": "sample.extended-inversions", "order": 2,
+      "source": { "address": null, "catalogTitle": null, "evidence": "local-design", "note": "小大七和弦四种位置，不含声部连接。" },
+      "spec": {
+        "id": "sample.extended-inversions", "version": 1, "title": "小大七和弦转位", "provenance": "local-design",
+        "sourceTopic": { "courseId": "sightear:samples", "activity": 7 },
+        "task": { "kind": "chord-inversion", "qualities": ["minorMajor7"], "inversions": [0, 1, 2, 3] },
+        "stimulus": { "direction": "harmonic", "rootMidi": [48, 59], "tempoBpm": 90, "reference": "none", "gapBeats": 0 },
+        "questionCount": 8, "scoring": "exact-choice-v1", "availability": "engine-ready"
+      }
+    },
+    {
+      "id": "sample.extended-progression", "order": 3,
+      "source": { "address": null, "catalogTitle": null, "evidence": "local-design", "note": "固定主音的扩展 ii–V–I；不做转调、自动连接或四部写作。" },
+      "spec": {
+        "id": "sample.extended-progression", "version": 1, "kind": "harmony-progression", "title": "固定调性扩展和弦进行",
+        "tempoBpm": 90, "itemRating": 1100, "questionCount": 8,
+        "policy": { "grading": "graded-v2", "onsetMs": 100, "durationMs": 150, "pitchCents": 25, "latencyMs": 0, "alignStart": false },
+        "tonics": [48, 50, 53, 58], "mode": "major", "sequences": [],
+        "chordSequences": [
+          [{ "degree": 2, "code": "min9" }, { "degree": 5, "code": "dom13", "voicing": { "bassDegree": 1, "omitDegrees": [5, 11], "spread": "stacked" } }, { "degree": 1, "code": "maj79" }],
+          [{ "degree": 2, "code": "min11" }, { "degree": 5, "code": "7b9" }, { "degree": 1, "code": "maj69" }]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "packId": "workshop.rhythm-reading",
+  "revision": "0.1.0",
+  "title": "节奏视读样例包",
+  "lessons": [
+    {
+      "id": "workshop.rhythm-reading.sample",
+      "order": 1,
+      "source": {
+        "address": null,
+        "catalogTitle": null,
+        "evidence": "local-design",
+        "note": "仅用于验证内容包格式，仅作格式样例。"
+      },
+      "spec": {
+        "id": "workshop.rhythm-reading.sample",
+        "version": 1,
+        "kind": "rhythm-reading",
+        "title": "四分音符节奏视读",
+        "tempoBpm": 90,
+        "itemRating": 1100,
+        "questionCount": 1,
+        "policy": {
+          "grading": "graded-v2",
+          "onsetMs": 100,
+          "durationMs": 150,
+          "pitchCents": 25,
+          "latencyMs": 0,
+          "alignStart": false
+        },
+        "scores": [
+          {
+            "clef": "treble",
+            "measures": [
+              {
+                "key": { "tonic": 0, "mode": "major", "fifths": 0 },
+                "time": { "beats": 4, "unit": 4 },
+                "voices": [
+                  {
+                    "notes": [
+                      { "pitch": { "midi": 60, "name": "C4" }, "duration": { "value": 4, "dots": 0 }, "tie": false },
+                      { "pitch": null, "duration": { "value": 4, "dots": 0 }, "tie": false },
+                      { "pitch": { "midi": 60, "name": "C4" }, "duration": { "value": 4, "dots": 0 }, "tie": false },
+                      { "pitch": { "midi": 60, "name": "C4" }, "duration": { "value": 4, "dots": 0 }, "tie": false }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
